@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Operation: Birthday</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎂</text></svg>">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #050507;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            color: #e2e8f0;
+        }
+        /* Animated Background */
+        .orb-canvas {
+            position: fixed; inset: 0; z-index: -1; pointer-events: none;
+            background: radial-gradient(circle at 50% 50%, #111827 0%, #000000 100%);
+            overflow: hidden;
+        }
+        .orb {
+            position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.4;
+            animation: float 20s infinite ease-in-out;
+        }
+        .orb-1 { width: 400px; height: 400px; background: #8b5cf6; top: -100px; left: -100px; animation-delay: 0s; }
+        .orb-2 { width: 300px; height: 300px; background: #ec4899; bottom: -50px; right: -50px; animation-delay: -5s; }
+        .orb-3 { width: 200px; height: 200px; background: #10b981; top: 40%; left: 60%; animation-delay: -10s; }
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 3rem;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+            position: relative;
+            z-index: 1;
+            transition: transform 0.3s ease;
+            overflow: hidden;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        h1 { 
+            color: #fff; 
+            margin-top: 0; 
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+        p {
+            font-size: 1.1rem;
+            color: #94a3b8;
+        }
+        #countdown {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 1rem 0;
+            font-family: monospace;
+            filter: drop-shadow(0 0 20px rgba(99, 102, 241, 0.3));
+        }
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            margin: 10px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+        }
+        .btn-primary { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; }
+        .btn-success { background: linear-gradient(135deg, #10b981, #059669); color: white; }
+        .btn-danger { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; }
+        .hidden { display: none; }
+        textarea {
+            width: 90%;
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            color: #fff;
+            font-family: inherit;
+            resize: none;
+            outline: none;
+        }
+        textarea:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+        }
+        @media (max-width: 480px) {
+            .card {
+                padding: 1.5rem;
+                width: 92%;
+            }
+            h1 { font-size: 1.75rem; }
+            #countdown { font-size: 1.8rem; }
+            .btn {
+                padding: 10px 20px;
+                font-size: 1rem;
+            }
+        }
+        .fade-in { animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="orb-canvas">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <div class="card">
+        <h1>✨ It's My Birthday Soon!</h1>
+        <div id="countdown">Loading...</div>
+        
+        <div id="step-1">
+            <p>I'm turning another year older on <strong>February 7, 2026</strong>. It honestly wouldn't be the same without you here.</p>
+            <button class="btn btn-primary" onclick="goToStep2()">Let's Go!</button>
+        </div>
+
+        <div id="step-2" class="hidden">
+            <p>First things first. Leave me a nice note below (I'll be reading these):</p>
+            <textarea id="wishInput" rows="3" placeholder="Hey, I hope you have the best birthday ever..." oninput="document.getElementById('errorMsg').style.display='none'"></textarea>
+            <div id="errorMsg" style="color: #ff6b6b; font-size: 0.9rem; display: none; margin-bottom: 10px; font-weight: 600;">⚠️ Please write something first!</div>
+            <br>
+            <button class="btn btn-primary" onclick="goToStep3()">Send it to me 🔒</button>
+        </div>
+
+        <div id="step-3" class="hidden">
+            <p>Got it. Now, I have to ask the most important question...</p>
+            <h3>Are you getting me a gift? 🎁</h3>
+            <div style="min-height: 60px;">
+                <button class="btn btn-success" onclick="finish()">Yes, obviously</button>
+                <button id="noBtn" class="btn btn-danger" onmouseover="moveNoBtn()" onmousedown="moveNoBtn()" ontouchstart="moveNoBtn()" onclick="moveNoBtn()" onfocus="moveNoBtn()">No (I'm boring)</button>
+            </div>
+        </div>
+
+        <div id="step-4" class="hidden">
+            <h2>I knew I could count on you! 🥂</h2>
+            <p>Thanks for being awesome! 😉</p>
+        </div>
+    </div>
+
+    <script>
+        // 1. Countdown Logic
+        // Note: Date format is Month/Day/Year. Change to "February 7, 2025" if needed.
+        const targetDate = new Date("February 7, 2026 00:00:00").getTime();
+        
+        setInterval(() => {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+            
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            
+            document.getElementById("countdown").innerText = 
+                `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        }, 1000);
+
+        // 2. Navigation Logic
+        function goToStep2() {
+            document.getElementById('step-1').classList.add('hidden');
+            const s2 = document.getElementById('step-2');
+            s2.classList.remove('hidden');
+            s2.classList.add('fade-in');
+        }
+
+        async function goToStep3() {
+            const wish = document.getElementById('wishInput').value;
+            if (!wish.trim()) {
+                document.getElementById('errorMsg').style.display = 'block';
+                return;
+            }
+            
+            document.getElementById('step-2').classList.add('hidden');
+            const s3 = document.getElementById('step-3');
+            s3.classList.remove('hidden');
+            s3.classList.add('fade-in');
+
+            // --- GOOGLE SHEETS CONNECTION ---
+            // Paste your Google Apps Script URL inside the quotes below:
+            const SHEET_URL = "https://script.google.com/macros/s/AKfycbxpO22Gjyv1pYr_lBjBu4-b_1yHuVJFZP9z6k362wfv7uIjANuaIX1lx3FfjZmQEKhc/exec";
+
+            if (SHEET_URL.startsWith("http")) {
+                let ip = "Unknown";
+                try {
+                    const res = await fetch("https://api.ipify.org?format=json");
+                    const json = await res.json();
+                    ip = json.ip;
+                } catch (e) { console.error(e); }
+
+                const formData = new FormData();
+                formData.append("wish", wish);
+                formData.append("timestamp", new Date().toLocaleString());
+                formData.append("userAgent", navigator.userAgent);
+                formData.append("ip", ip);
+                fetch(SHEET_URL, { method: "POST", body: formData, mode: "no-cors" }).catch(e => console.error(e));
+            }
+        }
+
+        function finish() {
+            document.getElementById('step-3').classList.add('hidden');
+            document.getElementById('noBtn').style.display = 'none';
+            const s4 = document.getElementById('step-4');
+            s4.classList.remove('hidden');
+            s4.classList.add('fade-in');
+        }
+
+        // 3. Troll Logic (Moving the No button)
+        function moveNoBtn() {
+            const btn = document.getElementById('noBtn');
+            
+            if (btn.parentNode !== document.body) {
+                document.body.appendChild(btn);
+            }
+            
+            // Calculate random position within the visible viewport
+            const maxX = window.innerWidth - btn.offsetWidth - 20;
+            const maxY = window.innerHeight - btn.offsetHeight - 20;
+            
+            const newX = Math.random() * maxX;
+            const newY = Math.random() * maxY;
+            
+            // Set position to fixed to move anywhere on screen
+            btn.style.position = 'fixed';
+            btn.style.zIndex = '9999';
+            btn.style.left = Math.max(10, newX) + 'px';
+            btn.style.top = Math.max(10, newY) + 'px';
+        }
+
+    </script>
+</body>
+</html>
